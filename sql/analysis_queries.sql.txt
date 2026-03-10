@@ -1,0 +1,21 @@
+-- Revenue by Category
+SELECT Category, SUM(Total_Value) AS Total_Revenue
+FROM sales_data
+GROUP BY Category;
+
+-- Revenue by Season
+SELECT Season, SUM(Total_Value) AS Total_Revenue
+FROM sales_data
+GROUP BY Season;
+
+-- Discount Impact
+SELECT Discount_Applied, SUM(Total_Value) AS Revenue
+FROM sales_data
+GROUP BY Discount_Applied;
+
+-- Top Customers
+SELECT Customer_ID, SUM(Total_Value) AS Customer_Revenue
+FROM sales_data
+GROUP BY Customer_ID
+ORDER BY Customer_Revenue DESC
+LIMIT 10;

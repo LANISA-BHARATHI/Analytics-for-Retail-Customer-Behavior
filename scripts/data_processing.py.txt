@@ -1,0 +1,37 @@
+import pandas as pd
+
+df = pd.read_csv("../data/raw_retail_data.csv")
+
+df.columns = df.columns.str.replace(" ", "_")
+
+df["Total_Value"] = df["Purchase_Amount_(USD)"]
+
+customer_summary = df.groupby("Customer_ID").agg({
+    "Total_Value": "sum",
+    "Previous_Purchases": "mean",
+    "Review_Rating": "mean"
+}).reset_index()
+
+customer_summary.columns = [
+    "Customer_ID",
+    "Lifetime_Value",
+    "Avg_Previous_Purchases",
+    "Avg_Review_Rating"
+]
+
+customer_summary["Segment_Label"] = "Low Value"
+
+customer_summary.loc[
+    customer_summary["Lifetime_Value"] > 50,
+    "Segment_Label"
+] = "Medium Value"
+
+customer_summary.loc[
+    customer_summary["Lifetime_Value"] > 80,
+    "Segment_Label"
+] = "High Value"
+
+df.to_csv("../data/sales_data.csv", index=False)
+customer_summary.to_csv("../data/customer_summary.csv", index=False)
+
+print("Processing complete")
